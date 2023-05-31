@@ -6,7 +6,7 @@ namespace Syllogisms
     internal class Program
     {
         public static void AcceptUserInput()
-        { 
+        {
             Console.Write("Enter syllogism type: ");
             string input = Console.ReadLine();
             string pattern = @"(?i)([aeio]{3})([1-4])";
@@ -16,19 +16,46 @@ namespace Syllogisms
             {
                 string chars = match.Groups[1].Value;
                 int digit = int.Parse(match.Groups[2].Value);
-                
-                char firstChar = chars[0];
-                char secondChar = chars[1];
-                char thirdChar = chars[2];
-                
-                string partialSentence = GeneratePartialSentence("cats", "animals", "mammals", digit, 1);
-                char mood = char.ToUpper(firstChar);
-                string fullSentence = GenerateFullSentence(partialSentence, mood);
-                Console.WriteLine(fullSentence);
+                string subjectTerm = GetRandomWord();
+                string middleTerm = GetRandomWord();
+                string predicateTerm = GetRandomWord();
+
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    char mood = char.ToUpper(chars[i]);
+                    string partialSentence = GeneratePartialSentence(subjectTerm, middleTerm, predicateTerm, digit, i + 1);
+                    string fullSentence = GenerateFullSentence(partialSentence, mood);
+                    Console.WriteLine(fullSentence);
+                }
+            }
+            else
+            {
+                Environment.Exit(1);
+            }
+        }
+
+        public static string GetRandomWord()
+        {
+            var wordlist = new List<string>()
+            {
+                "cats", "animals", "mammals", "pets", "people",
+                "chairs", "mortal", "immortal", "alive", "inanimate",
+                "stones", "warm", "cold", "big", "small"
+            };
+
+            var rnd = new Random();
+            string pickedWord = "";
+
+            if (wordlist.Count > 0)
+            {
+                int rndIndex = rnd.Next(0, wordlist.Count);
+                pickedWord = wordlist[rndIndex];
+                wordlist.RemoveAt(rndIndex);
             }
 
-            else Environment.Exit(1);
+            return pickedWord;
         }
+
         public static string GeneratePartialSentence(string subjectTerm, string middleTerm, string predicateTerm,
             int figure, int order)
         {
@@ -131,3 +158,4 @@ namespace Syllogisms
             AcceptUserInput();
         }
     }
+}
