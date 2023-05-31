@@ -1,7 +1,34 @@
-﻿namespace Syllogisms
+﻿using System.Runtime.ExceptionServices;
+using System.Text.RegularExpressions;
+
+namespace Syllogisms
 {
     internal class Program
     {
+        public static void AcceptUserInput()
+        { 
+            Console.Write("Enter syllogism type: ");
+            string input = Console.ReadLine();
+            string pattern = @"(?i)([aeio]{3})([1-4])";
+            var match = Regex.Match(input, pattern);
+
+            if (match.Success)
+            {
+                string chars = match.Groups[1].Value;
+                int digit = int.Parse(match.Groups[2].Value);
+                
+                char firstChar = chars[0];
+                char secondChar = chars[1];
+                char thirdChar = chars[2];
+                
+                string partialSentence = GeneratePartialSentence("cats", "animals", "mammals", digit, 1);
+                char mood = char.ToUpper(firstChar);
+                string fullSentence = GenerateFullSentence(partialSentence, mood);
+                Console.WriteLine(fullSentence);
+            }
+
+            else Environment.Exit(1);
+        }
         public static string GeneratePartialSentence(string subjectTerm, string middleTerm, string predicateTerm,
             int figure, int order)
         {
@@ -101,15 +128,6 @@
 
         static void Main(string[] args)
         {
-            string sentence;
-
-            for (int i = 1; i < 4; i++)
-            {
-                sentence = GeneratePartialSentence("cats", "animals", "mammals", 1, i);
-                Console.WriteLine(sentence);
-                string fullSentence = GenerateFullSentence(sentence, 'A');
-                Console.WriteLine(fullSentence);
-            }
+            AcceptUserInput();
         }
     }
-}
